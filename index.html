@@ -1,145 +1,774 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dimitris Karagounis | Data Analyst & Web Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ───────────────────────────────────────────── */
+    :root {
+      --bg:        #080d1a;
+      --bg-card:   #0e1529;
+      --bg-hover:  #131c38;
+      --indigo:    #4f46e5;
+      --indigo-lt: #6d64f0;
+      --violet:    #7c3aed;
+      --sky:       #38bdf8;
+      --white:     #f0f4ff;
+      --muted:     #94a3b8;
+      --border:    rgba(79,70,229,0.18);
+      --glow:      rgba(79,70,229,0.35);
+      --radius:    14px;
+      --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    /* ─── RESET ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-<title>Dimitris Karagounis | Portfolio</title>
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
-<link rel="stylesheet" href="style.css">
+    /* ─── NOISE TEXTURE OVERLAY ────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
 
+    /* ─── GRID BACKGROUND ──────────────────────────────────── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(79,70,229,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,70,229,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── LAYOUT ───────────────────────────────────────────── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── NAV ──────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 18px 0;
+      background: rgba(8,13,26,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--indigo); }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      padding: 110px 0 90px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--sky);
+      background: rgba(56,189,248,0.08);
+      border: 1px solid rgba(56,189,248,0.2);
+      border-radius: 100px;
+      padding: 6px 16px;
+      margin-bottom: 32px;
+      letter-spacing: 0.06em;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--sky);
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 .accent { color: var(--indigo-lt); }
+
+    .hero-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      min-height: 1.5em;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--indigo-lt);
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .hero-desc {
+      max-width: 520px;
+      margin: 0 auto 40px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--indigo);
+      color: #fff;
+      box-shadow: 0 0 0 0 var(--glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--indigo-lt);
+      box-shadow: 0 0 24px var(--glow);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--indigo);
+      background: rgba(79,70,229,0.08);
+      transform: translateY(-1px);
+    }
+
+    /* ─── SECTION BASE ─────────────────────────────────────── */
+    section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: var(--indigo-lt);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 40px;
+      line-height: 1.2;
+    }
+
+    /* ─── ABOUT ────────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: var(--indigo);
+      transform: translateY(-2px);
+    }
+
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--indigo-lt);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ─── PROJECTS ─────────────────────────────────────────── */
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--indigo), var(--violet), var(--sky));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .project-card:hover {
+      border-color: rgba(79,70,229,0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--border);
+    }
+
+    .project-card:hover::before { opacity: 1; }
+
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .project-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .project-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .project-type {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .project-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .project-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--indigo-lt);
+      background: rgba(79,70,229,0.1);
+      border: 1px solid rgba(79,70,229,0.2);
+      border-radius: 6px;
+      padding: 4px 10px;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--indigo-lt);
+      text-decoration: none;
+      transition: gap var(--transition), color var(--transition);
+    }
+
+    .project-link:hover { color: var(--white); gap: 10px; }
+
+    /* ─── SKILLS ───────────────────────────────────────────── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .skill-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .skill-item:hover {
+      border-color: var(--indigo);
+      background: var(--bg-hover);
+    }
+
+    .skill-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .skill-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* ─── CONTACT ──────────────────────────────────────────── */
+    .contact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-card::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(79,70,229,0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .contact-card p {
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto 32px;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── FOOTER ───────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    footer span { color: var(--indigo-lt); }
+
+    /* ─── SCROLL REVEAL ────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ───────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .project-header { flex-direction: column; gap: 8px; }
+      .nav-links { gap: 18px; }
+      .contact-card { padding: 32px 20px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
-
-
 <body>
 
-
-<header>
-
-<h1>Dimitris Karagounis</h1>
-
-<p>
-Data Analyst | Web Projects | Analytics
-</p>
-
-</header>
-
-
-
-<section>
-
-<h2>About Me</h2>
-
-<p>
-I am a Data Analyst interested in data-driven projects,
-web development and building useful digital experiences.
-</p>
-
-</section>
-
-
-
-
-<section>
-
-<h2>Projects</h2>
-
-
-
-<div class="card">
-
-
-<h3>TCG Quest Log</h3>
-
-
-<p>
-A trading card game content platform focused on news,
-articles, community content and organized information.
-</p>
-
-
-<p>
-<b>Technologies:</b>
-HTML, CSS, SEO, Analytics
-</p>
-
-
-<a href="https://tcgquestlog.com" target="_blank">
-Visit Website
-</a>
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-<section>
-
-<h2>Skills</h2>
-
-
-<ul>
-
-<li>Excel</li>
-
-<li>SQL</li>
-
-<li>Data Analysis</li>
-
-<li>HTML / CSS</li>
-
-<li>Website Management</li>
-
-<li>Analytics</li>
-
-</ul>
-
-
-</section>
-
-
-
-
-<section>
-
-<h2>Contact</h2>
-
-
-<p>
-GitHub: github.com/dimitriskarjim-web
-</p>
-
-
-<p>
-LinkedIn: Add your LinkedIn
-</p>
-
-
-</section>
-
-
-
-<footer>
-
-<p>
-© 2026 Dimitris Karagounis
-</p>
-
-</footer>
-
-
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <!-- ── NAV ── -->
+  <nav aria-label="Primary navigation">
+    <div class="inner">
+      <div class="nav-logo">DK<span>.</span></div>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="wrapper">
+
+    <!-- ── HERO ── -->
+    <header class="hero">
+      <div class="hero-badge">Open to work</div>
+      <h1>Dimitris <span class="accent">Karagounis</span></h1>
+      <p class="hero-sub" id="typewriter"><span class="cursor"></span></p>
+      <p class="hero-desc">
+        Data analyst & web developer turning raw data and ideas into 
+        clear insights and functional digital products.
+      </p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          View Projects
+        </a>
+        <a href="#contact" class="btn btn-outline">Get in Touch</a>
+      </div>
+    </header>
+
+    <!-- ── ABOUT ── -->
+    <section id="about">
+      <div class="section-label">01 — About</div>
+      <h2 class="section-title">Who I Am</h2>
+      <div class="about-grid reveal">
+        <div class="about-text">
+          <p>
+            I'm a data analyst with a hands-on approach to building things on the web.
+            I work at the intersection of structured data, content systems, and front-end development.
+          </p>
+          <p>
+            Currently running <strong>TCG Quest Log</strong>, a multi-game trading card 
+            community platform — built and maintained entirely by me, from the database 
+            layer to the front-end.
+          </p>
+          <p>
+            I enjoy turning complex data into readable experiences and shipping products 
+            that people actually use.
+          </p>
+        </div>
+        <div class="about-stats">
+          <div class="stat-card">
+            <div class="stat-num">4+</div>
+            <div class="stat-label">TCGs Covered</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">14k+</div>
+            <div class="stat-label">Cards in Database</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Solo Built</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">2026</div>
+            <div class="stat-label">Active & Shipping</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROJECTS ── -->
+    <section id="projects">
+      <div class="section-label">02 — Projects</div>
+      <h2 class="section-title">What I've Built</h2>
+
+      <div class="project-card reveal">
+        <div class="project-header">
+          <div>
+            <div class="project-icon">🃏</div>
+          </div>
+          <div style="flex:1">
+            <div class="project-title">TCG Quest Log</div>
+            <div class="project-type">Full-Stack Web Platform</div>
+          </div>
+        </div>
+        <p class="project-desc">
+          A multi-TCG fan hub covering Yu-Gi-Oh!, Pokémon, One Piece, and Warhammer 40K.
+          Features include live card databases (14k+ YGO, 2.4k+ One Piece cards), 
+          interactive deck builders, meta analysis pages, news aggregation, and REST APIs — 
+          all built and operated solo.
+        </p>
+        <div class="project-footer">
+          <div class="tag-list">
+            <span class="tag">WordPress</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">PHP / REST API</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">HTML / CSS</span>
+            <span class="tag">Analytics</span>
+          </div>
+          <a href="https://tcgquestlog.com" target="_blank" rel="noopener" class="project-link">
+            Visit site
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── SKILLS ── -->
+    <section id="skills">
+      <div class="section-label">03 — Skills</div>
+      <h2 class="section-title">What I Work With</h2>
+      <div class="skills-grid reveal">
+        <div class="skill-item">
+          <span class="skill-icon">📊</span>
+          <span class="skill-name">Excel & Spreadsheets</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-icon">🗄️</span>
+          <span class="skill-name">SQL & MySQL</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-icon">📈</span>
+          <span class="skill-name">Data Analysis</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-icon">🌐</span>
+          <span class="skill-name">HTML / CSS</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-icon">⚡</span>
+          <span class="skill-name">JavaScript</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-icon">🐘</span>
+          <span class="skill-name">PHP / REST APIs</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-icon">🔍</span>
+          <span class="skill-name">SEO & Analytics</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-icon">🛠️</span>
+          <span class="skill-name">WordPress / CMS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CONTACT ── -->
+    <section id="contact">
+      <div class="section-label">04 — Contact</div>
+      <h2 class="section-title">Get in Touch</h2>
+      <div class="contact-card reveal">
+        <h3>Let's work together</h3>
+        <p>Open to freelance data projects, web collaborations, or just a good conversation about TCGs.</p>
+        <div class="contact-links">
+          <a href="https://github.com/dimitriskarjim-web" target="_blank" rel="noopener" class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="https://linkedin.com/in/" target="_blank" rel="noopener" class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://tcgquestlog.com" target="_blank" rel="noopener" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            TCG Quest Log
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /wrapper -->
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="wrapper">
+      <p>© 2026 <span>Dimitris Karagounis</span> — Built with intent, not a template.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ── Typewriter
+    const phrases = [
+      'Data Analyst',
+      'Web Developer',
+      'TCG Enthusiast',
+      'Database Builder',
+    ];
+    const el = document.getElementById('typewriter');
+    let pi = 0, ci = 0, deleting = false;
+
+    function type() {
+      const phrase = phrases[pi];
+      if (!deleting) {
+        el.innerHTML = phrase.slice(0, ++ci) + '<span class="cursor"></span>';
+        if (ci === phrase.length) {
+          setTimeout(() => { deleting = true; requestAnimationFrame(tick); }, 1800);
+          return;
+        }
+      } else {
+        el.innerHTML = phrase.slice(0, --ci) + '<span class="cursor"></span>';
+        if (ci === 0) {
+          deleting = false;
+          pi = (pi + 1) % phrases.length;
+          setTimeout(() => requestAnimationFrame(tick), 400);
+          return;
+        }
+      }
+      setTimeout(() => requestAnimationFrame(tick), deleting ? 45 : 80);
+    }
+
+    function tick() { type(); }
+    setTimeout(tick, 600);
+
+    // ── Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => observer.observe(r));
+  </script>
 
 </body>
-
-
 </html>
-```
